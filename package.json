@@ -1,0 +1,17 @@
+{
+  "name": "ai-agent-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo for AI Chat Agent with Next.js and Google ADK",
+  "scripts": {
+    "install:app": "cd app && npm install",
+    "install:agents": "cd agents && uv sync",
+    "install:all": "npm run install:app && npm run install:agents",
+    "dev:app": "cd app && npm run dev",
+    "dev:agents": "cd agents && uv run python main.py",
+    "dev": "concurrently \"npm run dev:app\" \"npm run dev:agents\"",
+    "postinstall": "npm run install:all"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
