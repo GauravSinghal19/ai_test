@@ -1,96 +1,224 @@
 schema: spec-driven
 
 context: |
-    Project: AI Meeting-to-Jira Automation Platform
-
-    Purpose:
-    This system ingests meeting recordings and automatically generates
-    Jira stories using AI.
-
-    Primary workflow:
-    1. User uploads meeting video or recording link
-    2. System extracts transcripts
-    3. Transcripts are analyzed 
-    4. AI extracts requirements, decisions, risks, blockers, and action items
-    5. AI generates Jira-ready stories
-    6. Stories are pushed to Jira Cloud APIs
-    7. All tickets must include label: AI_TEST
-
-    Tech stack:
-    - Backend: Python 3.12 + FastAPI
-    - Frontend: Next.js + React + TailwindCSS
-
-    Architecture:
-    - Service-oriented modular backend
-    - Async processing for long-running jobs
-    - AI pipeline separated into:
-      - transcription
-      - transcript cleanup
-      - requirement extraction
-      - Jira story generation
-    - All AI outputs validated using Pydantic schemas
-    - Use dependency injection and repository patterns
-
-    Jira conventions:
-    - All generated tickets must include:
-      - summary
-      - description
-      - acceptance criteria
-      - priority
-      - labels
-    - Add AI_TEST label to every issue
-    - Prevent duplicate story creation
-    - Use Story issue type unless otherwise specified
-
-    Coding standards:
-    - Use async/await
-    - Add type hints
-    - Add structured logging
-    - Add retries for external APIs
-    - Use clean architecture
-    - Keep business logic out of controllers
-    - Prefer small composable services
-
-    API standards:
-    - RESTful APIs
-    - JSON responses
-    - Version APIs under /api/v1
-    - OpenAPI documentation required
-
-    Testing:
-    - Use pytest
-    - Add unit and integration tests
-    - Mock external AI providers
-    - Add evaluation tests for prompt quality
-
-    Security:
-    - Secrets stored in environment variables
-    - Use OAuth2/JWT authentication
-    - Encrypt sensitive credentials
-    - Maintain audit logs
-
-    Important constraints:
-    - Must support meetings up to 3 hours
-    - Must support multiple speakers
-    - Must tolerate partial transcript failures
-    - Must retry failed Jira requests
-    - AI outputs must be deterministic and structured
-
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
-
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+    project:
+        name: ai-service-agent
+        description: >
+            Production-grade AI service agent platform built as a monorepo.
+            The system contains a backend multi-agent AI orchestration layer using
+            Google ADK + Vertex AI and a frontend conversational UI using Next.js.
+        
+        type: monorepo
+    
+    repository:
+        structure:
+            - path: /agents
+              description: >
+                  Backend AI agent application built with Python and Google Agent
+                  Development Kit (ADK). Uses uv for package management.
+                  Contains one root orchestrator agent and multiple sub-agents.
+    
+            - path: /app
+              description: >
+                  Frontend conversational web application built with Node.js,
+                  Next.js, React, and TypeScript. Uses npm for package management.
+    
+            - path: /package.json
+              description: >
+                  Root-level npm scripts to install dependencies, run development
+                  servers, and debug frontend and backend simultaneously.
+    
+    technology_stack:
+        backend:
+            language: Python
+            framework: Google Agent Development Kit (ADK)
+            package_manager: uv
+            llm_provider: Google Vertex AI
+            model: gemini-2.5-flash
+            database:
+                type: Google Cloud SQL
+                usage:
+                    - establish secure database connections
+                    - execute analytical SQL queries
+                    - aggregate onboarding metrics
+                    - calculate UPC onboarding statistics
+        
+        frontend:
+            language: TypeScript
+            framework: Next.js
+            ui_library: React
+            runtime: Node.js
+            package_manager: npm
+    
+    application_domain:
+        description: >
+            Conversational analytics AI assistant for UPC onboarding insights.
+        
+        capabilities:
+            - Accept natural language queries from users
+            - Understand date ranges such as:
+                  - previous day
+                  - previous week
+                  - previous month
+                  - custom ranges
+            - Retrieve onboarding metrics from Google Cloud SQL
+            - Calculate onboarding counts across systems
+            - Return summarized analytical responses
+        
+        supported_systems:
+            - affinity
+            - step
+            - stella
+    
+    backend_architecture:
+        agent_design:
+            root_agent:
+                responsibilities:
+                    - conversation orchestration
+                    - user intent understanding
+                    - delegation to sub-agents
+                    - response synthesis
+            
+            sub_agents:
+                - name: sql_agent
+                  responsibilities:
+                      - generate SQL queries
+                      - validate query safety
+                      - execute queries against Cloud SQL
+    
+                - name: analytics_agent
+                  responsibilities:
+                      - aggregate onboarding metrics
+                      - compute counts and trends
+                      - generate summaries
+    
+                - name: date_range_agent
+                  responsibilities:
+                      - parse natural language dates
+                      - normalize date ranges
+                      - support relative periods
+    
+                - name: response_agent
+                  responsibilities:
+                      - format final conversational response
+                      - generate structured output
+    
+    database_guidelines:
+        connection:
+            provider: Google Cloud SQL
+            requirements:
+                - secure credential management
+                - environment-based configuration
+                - connection pooling
+                - retry handling
+        
+        query_rules:
+            - use parameterized SQL queries
+            - avoid hardcoded credentials
+            - validate generated SQL before execution
+            - log query execution safely
+            - optimize aggregation queries
+    
+    api_design:
+        style: REST
+        communication:
+            frontend_to_backend: HTTP/JSON
+        
+        endpoints:
+            - conversational query endpoint
+            - health check endpoint
+            - metrics endpoint
+    
+    frontend_requirements:
+        features:
+            - conversational chat interface
+            - streaming AI responses
+            - loading and error states
+            - responsive design
+            - conversation history
+        
+        architecture:
+            - reusable React components
+            - typed API clients
+            - server/client component separation
+            - environment-based configuration
+    
+    coding_standards:
+        backend:
+            - use type hints
+            - follow PEP8
+            - modular agent design
+            - async-first architecture
+            - structured logging
+        
+        frontend:
+            - strict TypeScript mode
+            - functional React components
+            - reusable hooks
+            - feature-based organization
+    
+    security:
+        requirements:
+            - store secrets in environment variables
+            - never commit credentials
+            - use least-privilege database access
+            - sanitize user inputs
+            - validate generated SQL
+            - enable secure API communication
+    
+    observability:
+        logging:
+            - structured logs
+            - request tracing
+            - agent execution tracing
+        
+        monitoring:
+            - API latency
+            - query execution time
+            - token usage
+            - agent failures
+    
+    development:
+        environments:
+            - local
+            - dev
+            - staging
+            - production
+        
+        commands:
+            - install all dependencies
+            - run frontend and backend together
+            - debug backend agents
+            - run frontend locally
+    
+    deployment:
+        backend:
+            target: Google Cloud
+        
+        frontend:
+            target: Vercel or Google Cloud Run
+        
+        ci_cd:
+            - automated testing
+            - linting
+            - type checking
+            - deployment pipelines
+    
+    testing:
+        backend:
+            - unit tests
+            - agent integration tests
+            - SQL execution tests
+        
+        frontend:
+            - component tests
+            - integration tests
+            - end-to-end chat flow tests
+    
+    goals:
+        - production-grade architecture
+        - scalable multi-agent orchestration
+        - reliable conversational analytics
+        - maintainable monorepo structure
+        - secure Cloud SQL access
+        - fast analytical responses
