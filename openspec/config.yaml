@@ -1,0 +1,96 @@
+schema: spec-driven
+
+context: |
+    Project: AI Meeting-to-Jira Automation Platform
+
+    Purpose:
+    This system ingests meeting recordings and automatically generates
+    Jira stories using AI.
+
+    Primary workflow:
+    1. User uploads meeting video or recording link
+    2. System extracts transcripts
+    3. Transcripts are analyzed 
+    4. AI extracts requirements, decisions, risks, blockers, and action items
+    5. AI generates Jira-ready stories
+    6. Stories are pushed to Jira Cloud APIs
+    7. All tickets must include label: AI_TEST
+
+    Tech stack:
+    - Backend: Python 3.12 + FastAPI
+    - Frontend: Next.js + React + TailwindCSS
+
+    Architecture:
+    - Service-oriented modular backend
+    - Async processing for long-running jobs
+    - AI pipeline separated into:
+      - transcription
+      - transcript cleanup
+      - requirement extraction
+      - Jira story generation
+    - All AI outputs validated using Pydantic schemas
+    - Use dependency injection and repository patterns
+
+    Jira conventions:
+    - All generated tickets must include:
+      - summary
+      - description
+      - acceptance criteria
+      - priority
+      - labels
+    - Add AI_TEST label to every issue
+    - Prevent duplicate story creation
+    - Use Story issue type unless otherwise specified
+
+    Coding standards:
+    - Use async/await
+    - Add type hints
+    - Add structured logging
+    - Add retries for external APIs
+    - Use clean architecture
+    - Keep business logic out of controllers
+    - Prefer small composable services
+
+    API standards:
+    - RESTful APIs
+    - JSON responses
+    - Version APIs under /api/v1
+    - OpenAPI documentation required
+
+    Testing:
+    - Use pytest
+    - Add unit and integration tests
+    - Mock external AI providers
+    - Add evaluation tests for prompt quality
+
+    Security:
+    - Secrets stored in environment variables
+    - Use OAuth2/JWT authentication
+    - Encrypt sensitive credentials
+    - Maintain audit logs
+
+    Important constraints:
+    - Must support meetings up to 3 hours
+    - Must support multiple speakers
+    - Must tolerate partial transcript failures
+    - Must retry failed Jira requests
+    - AI outputs must be deterministic and structured
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+# Example:
+#   context: |
+#     Tech stack: TypeScript, React, Node.js
+#     We use conventional commits
+#     Domain: e-commerce platform
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours

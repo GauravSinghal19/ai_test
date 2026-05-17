@@ -12,6 +12,7 @@
     "postinstall": "npm run install:all"
   },
   "devDependencies": {
+    "@fission-ai/openspec": "^1.3.1",
     "concurrently": "^8.2.2"
   }
 }
