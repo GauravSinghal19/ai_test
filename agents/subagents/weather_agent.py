@@ -1,7 +1,7 @@
 from google.adk.agents import LlmAgent
 import os
 
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 weather_agent = LlmAgent(
     name="WeatherAgent",
